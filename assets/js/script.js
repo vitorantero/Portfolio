@@ -25,7 +25,50 @@ const testimonialsModalFunc = function () {
   overlay.classList.toggle("active");
 };
 
+// Variáveis para o seletor de categorias
+const select = document.querySelector("[data-select]");
+const selectItems = document.querySelectorAll("[data-select-item]"); // Removida duplicação
+const selectValue = document.querySelector("[data-select-value]"); // Corrigido nome da variável para corresponder ao HTML
+const filterBtn = document.querySelectorAll("[data-filter-btn]");
 
+select.addEventListener("click", function () {
+  elementToggleFunc(this);
+});
+
+// Adiciona evento a todos os itens do seletor
+selectItems.forEach(item => {
+  item.addEventListener("click", function () {
+    const selectedValue = this.innerText.toLowerCase();
+    selectValue.innerText = this.innerText;
+    elementToggleFunc(select);
+    filterFunc(selectedValue);
+  });
+});
+
+// Variáveis e função de filtro
+const filterItems = document.querySelectorAll("[data-filter-item]");
+const filterFunc = function (selectedValue) {
+  filterItems.forEach(item => {
+    if (selectedValue === "todos" || selectedValue === item.dataset.category) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
+    }
+  });
+};
+
+// Adiciona evento a todos os botões de filtro para tela grande
+let lastClickedBtn = filterBtn[0];
+filterBtn.forEach(button => {
+  button.addEventListener("click", function () {
+    const selectedValue = this.innerText.toLowerCase();
+    selectValue.innerText = this.innerText;
+    filterFunc(selectedValue);
+    lastClickedBtn.classList.remove("active");
+    this.classList.add("active");
+    lastClickedBtn = this;
+  });
+});
 
 // Variáveis do formulário de contato
 const form = document.querySelector("[data-form]");
@@ -328,17 +371,14 @@ const certificates = [
 ];
 
 
-// Elementos de filtro
-const certificateList = document.getElementById('certificateList');
+const projectList = document.getElementById('projectList');
 const filterButtons = document.querySelectorAll('[data-filter-btn]');
 const filterSelectButton = document.querySelector('.filter-select');
 const selectList = document.querySelector('.select-list');
-const selectItems = document.querySelectorAll("[data-select-item]");
-const selectValue = document.querySelector("[data-select-value]");
 
 // Função para exibir certificados
 function displayCertificates(filter = 'Todos') {
-  certificateList.innerHTML = '';
+  projectList.innerHTML = '';
   certificates
     .filter(cert => filter === 'Todos' || cert.category === filter)
     .forEach(cert => {
@@ -358,50 +398,9 @@ function displayCertificates(filter = 'Todos') {
           <p class="project-category">${cert.institution}</p>
         </a>
       `;
-      certificateList.appendChild(listItem);
+      projectList.appendChild(listItem);
     });
 }
 
 // Inicializa com todos os certificados
 displayCertificates();
-
-// Função para ativar/desativar exibição
-function toggleSelectList() {
-  selectList.style.display = selectList.style.display === 'none' ? 'block' : 'none';
-}
-
-// Configura o filtro usando botões e lista suspensa
-function setFilter(category) {
-  // Atualiza filtro e exibe certificados
-  displayCertificates(category);
-  // Atualiza valor da categoria na lista suspensa
-  selectValue.innerText = category;
-
-  // Atualiza botões de filtro (desktop)
-  filterButtons.forEach(btn => btn.classList.remove('active'));
-  const activeButton = Array.from(filterButtons).find(btn => btn.innerText === category);
-  if (activeButton) activeButton.classList.add('active');
-
-  // Fecha o menu suspenso ao selecionar uma opção
-  selectList.style.display = 'none';
-}
-
-// Eventos para os botões de filtro (tela grande)
-filterButtons.forEach(button => {
-  button.addEventListener('click', () => setFilter(button.innerText));
-});
-
-// Evento para o botão de seleção de categoria
-filterSelectButton.addEventListener('click', toggleSelectList);
-
-// Eventos para os itens da lista suspensa
-selectItems.forEach(item => {
-  item.addEventListener('click', () => setFilter(item.innerText));
-});
-
-// Fecha o menu suspenso ao clicar fora dele
-document.addEventListener('click', (event) => {
-  if (!filterSelectButton.contains(event.target) && !selectList.contains(event.target)) {
-    selectList.style.display = 'none';
-  }
-});
