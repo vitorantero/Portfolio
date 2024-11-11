@@ -25,50 +25,7 @@ const testimonialsModalFunc = function () {
   overlay.classList.toggle("active");
 };
 
-// Variáveis para o seletor de categorias
-const select = document.querySelector("[data-select]");
-const selectItems = document.querySelectorAll("[data-select-item]"); // Removida duplicação
-const selectValue = document.querySelector("[data-select-value]"); // Corrigido nome da variável para corresponder ao HTML
-const filterBtn = document.querySelectorAll("[data-filter-btn]");
 
-select.addEventListener("click", function () {
-  elementToggleFunc(this);
-});
-
-// Adiciona evento a todos os itens do seletor
-selectItems.forEach(item => {
-  item.addEventListener("click", function () {
-    const selectedValue = this.innerText.toLowerCase();
-    selectValue.innerText = this.innerText;
-    elementToggleFunc(select);
-    filterFunc(selectedValue);
-  });
-});
-
-// Variáveis e função de filtro
-const filterItems = document.querySelectorAll("[data-filter-item]");
-const filterFunc = function (selectedValue) {
-  filterItems.forEach(item => {
-    if (selectedValue === "todos" || selectedValue === item.dataset.category) {
-      item.classList.add("active");
-    } else {
-      item.classList.remove("active");
-    }
-  });
-};
-
-// Adiciona evento a todos os botões de filtro para tela grande
-let lastClickedBtn = filterBtn[0];
-filterBtn.forEach(button => {
-  button.addEventListener("click", function () {
-    const selectedValue = this.innerText.toLowerCase();
-    selectValue.innerText = this.innerText;
-    filterFunc(selectedValue);
-    lastClickedBtn.classList.remove("active");
-    this.classList.add("active");
-    lastClickedBtn = this;
-  });
-});
 
 // Variáveis do formulário de contato
 const form = document.querySelector("[data-form]");
@@ -424,4 +381,49 @@ document.addEventListener('click', (event) => {
   if (!filterSelectButton.contains(event.target) && !selectList.contains(event.target)) {
     selectList.style.display = 'none';
   }
+});
+
+// Variáveis para o seletor de categorias
+const select = document.querySelector("[data-select]");
+const selectItems = document.querySelectorAll("[data-select-item]"); // Removida duplicação
+const selectValue = document.querySelector("[data-select-value]"); // Corrigido nome da variável para corresponder ao HTML
+const filterBtn = document.querySelectorAll("[data-filter-btn]");
+
+select.addEventListener("click", function () {
+  elementToggleFunc(this);
+});
+
+// Adiciona evento a todos os itens do seletor
+selectItems.forEach(item => {
+  item.addEventListener("click", function () {
+    const selectedValue = this.innerText.toLowerCase();
+    selectValue.innerText = this.innerText;
+    elementToggleFunc(select);
+    filterFunc(selectedValue);
+  });
+});
+
+// Variáveis e função de filtro
+const filterItems = document.querySelectorAll("[data-filter-item]");
+const filterFunc = function (selectedValue) {
+  filterItems.forEach(item => {
+    if (selectedValue === "todos" || selectedValue === item.dataset.category) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
+    }
+  });
+};
+
+// Adiciona evento a todos os botões de filtro para tela grande
+let lastClickedBtn = filterBtn[0];
+filterBtn.forEach(button => {
+  button.addEventListener("click", function () {
+    const selectedValue = this.innerText.toLowerCase();
+    selectValue.innerText = this.innerText;
+    filterFunc(selectedValue);
+    lastClickedBtn.classList.remove("active");
+    this.classList.add("active");
+    lastClickedBtn = this;
+  });
 });
