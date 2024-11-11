@@ -425,4 +425,3 @@ document.addEventListener('click', (event) => {
     selectList.style.display = 'none';
   }
 });
-
