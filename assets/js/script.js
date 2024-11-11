@@ -416,10 +416,10 @@ filterButtons.forEach(button => {
 
 // Configura a funcionalidade do seletor de categoria
 filterSelectButton.addEventListener('click', () => {
-  selectList.style.display = selectList.style.display === 'block' ? 'none' : 'block';
+  selectList.style.display = selectList.style.display === 'none' ? 'block' : 'none';
 });
 
-// Adiciona evento para fechar a lista ao clicar fora
+// Fecha o menu suspenso ao clicar fora dele
 document.addEventListener('click', (event) => {
   if (!filterSelectButton.contains(event.target) && !selectList.contains(event.target)) {
     selectList.style.display = 'none';
