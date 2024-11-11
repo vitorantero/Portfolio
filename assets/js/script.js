@@ -1,158 +1,120 @@
 'use strict';
 
+// Função para alternar visibilidade de elementos
+const elementToggleFunc = function (elem) {
+  elem.classList.toggle("active");
+};
 
-
-// element toggle function
-const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
-
-
-
-// sidebar variables
+// Variáveis para a sidebar
 const sidebar = document.querySelector("[data-sidebar]");
 const sidebarBtn = document.querySelector("[data-sidebar-btn]");
+sidebarBtn.addEventListener("click", function () {
+  elementToggleFunc(sidebar);
+});
 
-// sidebar toggle functionality for mobile
-sidebarBtn.addEventListener("click", function () { elementToggleFunc(sidebar); });
-
-
-
-// testimonials variables
-const testimonialsItem = document.querySelectorAll("[data-testimonials-item]");
+// Variáveis para o modal de depoimentos
 const modalContainer = document.querySelector("[data-modal-container]");
 const modalCloseBtn = document.querySelector("[data-modal-close-btn]");
 const overlay = document.querySelector("[data-overlay]");
-
-// modal variable
 const modalImg = document.querySelector("[data-modal-img]");
 const modalTitle = document.querySelector("[data-modal-title]");
 const modalText = document.querySelector("[data-modal-text]");
 
-// modal toggle function
 const testimonialsModalFunc = function () {
   modalContainer.classList.toggle("active");
   overlay.classList.toggle("active");
-}
+};
 
-
-
-
-
-// custom select variables
+// Variáveis para o seletor de categorias
 const select = document.querySelector("[data-select]");
-const selectItems = document.querySelectorAll("[data-select-item]");
-const selectValue = document.querySelector("[data-selecct-value]");
+const selectItems = document.querySelectorAll("[data-select-item]"); // Removida duplicação
+const selectValue = document.querySelector("[data-select-value]"); // Corrigido nome da variável para corresponder ao HTML
 const filterBtn = document.querySelectorAll("[data-filter-btn]");
 
-select.addEventListener("click", function () { elementToggleFunc(this); });
+select.addEventListener("click", function () {
+  elementToggleFunc(this);
+});
 
-// add event in all select items
-for (let i = 0; i < selectItems.length; i++) {
-  selectItems[i].addEventListener("click", function () {
-
-    let selectedValue = this.innerText.toLowerCase();
+// Adiciona evento a todos os itens do seletor
+selectItems.forEach(item => {
+  item.addEventListener("click", function () {
+    const selectedValue = this.innerText.toLowerCase();
     selectValue.innerText = this.innerText;
     elementToggleFunc(select);
     filterFunc(selectedValue);
-
   });
-}
+});
 
-// filter variables
+// Variáveis e função de filtro
 const filterItems = document.querySelectorAll("[data-filter-item]");
-
 const filterFunc = function (selectedValue) {
-
-  for (let i = 0; i < filterItems.length; i++) {
-
-    if (selectedValue === "todos") {
-      filterItems[i].classList.add("active");
-    } else if (selectedValue === filterItems[i].dataset.category) {
-      filterItems[i].classList.add("active");
+  filterItems.forEach(item => {
+    if (selectedValue === "todos" || selectedValue === item.dataset.category) {
+      item.classList.add("active");
     } else {
-      filterItems[i].classList.remove("active");
+      item.classList.remove("active");
     }
+  });
+};
 
-  }
-
-}
-
-// add event in all filter button items for large screen
+// Adiciona evento a todos os botões de filtro para tela grande
 let lastClickedBtn = filterBtn[0];
-
-for (let i = 0; i < filterBtn.length; i++) {
-
-  filterBtn[i].addEventListener("click", function () {
-
-    let selectedValue = this.innerText.toLowerCase();
+filterBtn.forEach(button => {
+  button.addEventListener("click", function () {
+    const selectedValue = this.innerText.toLowerCase();
     selectValue.innerText = this.innerText;
     filterFunc(selectedValue);
-
     lastClickedBtn.classList.remove("active");
     this.classList.add("active");
     lastClickedBtn = this;
-
   });
+});
 
-}
-
-
-
-// contact form variables
+// Variáveis do formulário de contato
 const form = document.querySelector("[data-form]");
 const formInputs = document.querySelectorAll("[data-form-input]");
 const formBtn = document.querySelector("[data-form-btn]");
 
-// add event to all form input field
-for (let i = 0; i < formInputs.length; i++) {
-  formInputs[i].addEventListener("input", function () {
-    // check form validation
+formInputs.forEach(input => {
+  input.addEventListener("input", function () {
     if (form.checkValidity()) {
       formBtn.removeAttribute("disabled");
     } else {
       formBtn.setAttribute("disabled", "");
     }
   });
-}
+});
 
-// handle form submission
 form.addEventListener("submit", function(event) {
   event.preventDefault();
-
   emailjs.sendForm('service_jkdbsvb', 'template_nawdaco', this)
-    .then(function() {
+    .then(() => {
       alert('Email sent successfully!');
       form.reset();
       formBtn.setAttribute("disabled", "");
-    }, function(error) {
+    }, (error) => {
       alert('Failed to send email: ' + JSON.stringify(error));
     });
 });
 
-
-
-
-// page navigation variables
+// Variáveis para navegação de página
 const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
 
-// add event to all nav link
-for (let i = 0; i < navigationLinks.length; i++) {
-  navigationLinks[i].addEventListener("click", function () {
-
-    for (let i = 0; i < pages.length; i++) {
-      if (this.innerHTML.toLowerCase() === pages[i].dataset.page) {
-        pages[i].classList.add("active");
-        navigationLinks[i].classList.add("active");
+navigationLinks.forEach(link => {
+  link.addEventListener("click", function () {
+    pages.forEach(page => {
+      if (this.innerHTML.toLowerCase() === page.dataset.page) {
+        page.classList.add("active");
+        link.classList.add("active");
         window.scrollTo(0, 0);
       } else {
-        pages[i].classList.remove("active");
-        navigationLinks[i].classList.remove("active");
+        page.classList.remove("active");
+        link.classList.remove("active");
       }
-    }
-
+    });
   });
-}
-
+});
 const certificates = [
   {
     title: "JavaScript e HTML",
@@ -411,11 +373,10 @@ const certificates = [
 
 const projectList = document.getElementById('projectList');
 const filterButtons = document.querySelectorAll('[data-filter-btn]');
-const selectItem = document.querySelectorAll('[data-select-item]');
 const filterSelectButton = document.querySelector('.filter-select');
 const selectList = document.querySelector('.select-list');
-const selectValues = document.querySelector('.select-value');
 
+// Função para exibir certificados
 function displayCertificates(filter = 'Todos') {
   projectList.innerHTML = '';
   certificates
@@ -449,25 +410,16 @@ filterButtons.forEach(button => {
   button.addEventListener('click', () => {
     filterButtons.forEach(btn => btn.classList.remove('active'));
     button.classList.add('active');
-    displayCertificates(button.getAttribute('data-filter-btn'));
+    displayCertificates(button.innerText);
   });
 });
 
 // Configura a funcionalidade do seletor de categoria
 filterSelectButton.addEventListener('click', () => {
-  selectList.style.display = selectList.style.display === 'none' ? 'block' : 'none';
+  selectList.style.display = selectList.style.display === 'block' ? 'none' : 'block';
 });
 
-selectItem.forEach(item => {
-  item.addEventListener('click', () => {
-    const selectedCategory = item.getAttribute('data-select-item');
-    displayCertificates(selectedCategory);
-    selectValues.textContent = item.textContent;
-    selectList.style.display = 'none'; // Esconde o menu após a seleção
-  });
-});
-
-// Fecha o menu suspenso se clicar fora dele
+// Adiciona evento para fechar a lista ao clicar fora
 document.addEventListener('click', (event) => {
   if (!filterSelectButton.contains(event.target) && !selectList.contains(event.target)) {
     selectList.style.display = 'none';
