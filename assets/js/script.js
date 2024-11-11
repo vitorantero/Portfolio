@@ -404,3 +404,25 @@ function displayCertificates(filter = 'Todos') {
 
 // Inicializa com todos os certificados
 displayCertificates();
+
+// Configura os filtros de categoria
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+    displayCertificates(button.innerText);
+  });
+});
+
+// Configura a funcionalidade do seletor de categoria
+filterSelectButton.addEventListener('click', () => {
+  selectList.style.display = selectList.style.display === 'none' ? 'block' : 'none';
+});
+
+// Fecha o menu suspenso ao clicar fora dele
+document.addEventListener('click', (event) => {
+  if (!filterSelectButton.contains(event.target) && !selectList.contains(event.target)) {
+    selectList.style.display = 'none';
+  }
+});
+
