@@ -328,14 +328,14 @@ const certificates = [
 ];
 
 
-const projectList = document.getElementById('projectList');
+const certificateList = document.getElementById('certificateList');
 const filterButtons = document.querySelectorAll('[data-filter-btn]');
 const filterSelectButton = document.querySelector('.filter-select');
 const selectList = document.querySelector('.select-list');
 
 // Função para exibir certificados
 function displayCertificates(filter = 'Todos') {
-  projectList.innerHTML = '';
+  certificateList.innerHTML = '';
   certificates
     .filter(cert => filter === 'Todos' || cert.category === filter)
     .forEach(cert => {
@@ -355,7 +355,7 @@ function displayCertificates(filter = 'Todos') {
           <p class="project-category">${cert.institution}</p>
         </a>
       `;
-      projectList.appendChild(listItem);
+      certificateList.appendChild(listItem);
     });
 }
 
