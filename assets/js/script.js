@@ -410,50 +410,66 @@ const certificates = [
 
 
 const projectList = document.getElementById('projectList');
-  const filterButtons = document.querySelectorAll('[data-filter-btn]');
-  const selectItem = document.querySelectorAll('[data-select-item]');
+const filterButtons = document.querySelectorAll('[data-filter-btn]');
+const selectItem = document.querySelectorAll('[data-select-item]');
+const filterSelectButton = document.querySelector('.filter-select');
+const selectList = document.querySelector('.select-list');
+const selectValues = document.querySelector('.select-value');
 
-  function displayCertificates(filter = 'Todos') {
-    projectList.innerHTML = '';
-    certificates
-      .filter(cert => filter === 'Todos' || cert.category === filter)
-      .forEach(cert => {
-        const listItem = document.createElement('li');
-        listItem.classList.add('project-item', 'active');
-        listItem.dataset.category = cert.category;
+function displayCertificates(filter = 'Todos') {
+  projectList.innerHTML = '';
+  certificates
+    .filter(cert => filter === 'Todos' || cert.category === filter)
+    .forEach(cert => {
+      const listItem = document.createElement('li');
+      listItem.classList.add('project-item', 'active');
+      listItem.dataset.category = cert.category;
 
-        listItem.innerHTML = `
-          <a href="${cert.link}" target="_blank">
-            <figure class="project-img">
-              <div class="project-item-icon-box">
-                <ion-icon name="eye-outline"></ion-icon>
-              </div>
-              <img src="${cert.image}" alt="${cert.title}" loading="lazy">
-            </figure>
-            <h3 class="project-title">${cert.title}</h3>
-            <p class="project-category">${cert.institution}</p>
-          </a>
-        `;
-        projectList.appendChild(listItem);
-      });
+      listItem.innerHTML = `
+        <a href="${cert.link}" target="_blank">
+          <figure class="project-img">
+            <div class="project-item-icon-box">
+              <ion-icon name="eye-outline"></ion-icon>
+            </div>
+            <img src="${cert.image}" alt="${cert.title}" loading="lazy">
+          </figure>
+          <h3 class="project-title">${cert.title}</h3>
+          <p class="project-category">${cert.institution}</p>
+        </a>
+      `;
+      projectList.appendChild(listItem);
+    });
+}
+
+// Inicializa com todos os certificados
+displayCertificates();
+
+// Configura os filtros de categoria
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+    displayCertificates(button.getAttribute('data-filter-btn'));
+  });
+});
+
+// Configura a funcionalidade do seletor de categoria
+filterSelectButton.addEventListener('click', () => {
+  selectList.style.display = selectList.style.display === 'none' ? 'block' : 'none';
+});
+
+selectItem.forEach(item => {
+  item.addEventListener('click', () => {
+    const selectedCategory = item.getAttribute('data-select-item');
+    displayCertificates(selectedCategory);
+    selectValues.textContent = item.textContent;
+    selectList.style.display = 'none'; // Esconde o menu após a seleção
+  });
+});
+
+// Fecha o menu suspenso se clicar fora dele
+document.addEventListener('click', (event) => {
+  if (!filterSelectButton.contains(event.target) && !selectList.contains(event.target)) {
+    selectList.style.display = 'none';
   }
-
-  // Inicializa com todos os certificados
-  displayCertificates();
-
-  // Configura os filtros de categoria
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-      displayCertificates(button.getAttribute('data-filter-btn'));
-    });
-  });
-
-  // Configura o seletor de categoria
-  selectItems.forEach(item => {
-    item.addEventListener('click', () => {
-      displayCertificates(item.getAttribute('data-select-item'));
-      document.querySelector('.select-value').textContent = item.textContent;
-    });
-  });
+});
